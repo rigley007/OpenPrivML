@@ -1,1 +1,13 @@
-
+numpy
+pandas
+scikit-learn
+scipy
+matplotlib
+seaborn
+tensorflow
+keras
+torch
+torchvision
+nltk
+spacy
+gensim
