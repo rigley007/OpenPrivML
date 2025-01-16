@@ -46,7 +46,7 @@ class Adv_Gen:
         # Freeze the Model's weights with unfixed Batch Norm
         self.classifer.train()                      # Unfix all the layers
         for p in self.classifer.parameters():
-            p.requires_grad = False                 # Fix all the layers excluding BatchNorm layers
+            p.requires_grad = False                 # Disable gradient computation for all parameters
 
         #initialize optimizers
         self.optimizer_G = torch.optim.Adam(self.generator.parameters(),
