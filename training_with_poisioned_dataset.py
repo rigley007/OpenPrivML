@@ -12,19 +12,20 @@ from imagenet10_dataloader import get_data_loaders
 class Imagenet10ResNet18(ResNet):
     def __init__(self):
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
+        # change path based on your model file
         super(Imagenet10ResNet18, self).load_state_dict(torch.load('/home/rui/.torch/resnet18-5c106cde.pth'))
         self.fc = torch.nn.Linear(512, 10)
     def forward(self, x):
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
 
-
+# Helper function to compute metrics
 def calculate_metric(metric_fn, true_y, pred_y):
     if "average" in inspect.getfullargspec(metric_fn).args:
         return metric_fn(true_y, pred_y, average="macro")
     else:
         return metric_fn(true_y, pred_y)
 
-
+# Print aggregated metrics
 def print_scores(p, r, f1, a, batch_size):
     for name, scores in zip(("precision", "recall", "F1", "accuracy"), (p, r, f1, a)):
         print(f"\t{name.rjust(14, ' ')}: {sum(scores) / batch_size:.4f}")
