@@ -13,7 +13,7 @@ class Imagenet10ResNet18(ResNet):
     def __init__(self):
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
         super(Imagenet10ResNet18, self).load_state_dict(torch.load('/home/rui/.torch/resnet18-5c106cde.pth'))
-        self.fc = torch.nn.Linear(512, 10)
+        self.fc = torch.nn.Linear(512, 10)  # Modify final layer for 10 classes
     def forward(self, x):
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
 
