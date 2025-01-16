@@ -84,8 +84,8 @@ def print_scores(p, r, f1, a, batch_size):
 if __name__ == '__main__':
     start_ts = time.time()
 
-    device = torch.device("cuda:0")
-
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    
     epochs = 10
 
     model = Imagenet10ResNet18()
