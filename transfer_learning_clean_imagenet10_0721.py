@@ -43,7 +43,6 @@ class Imagenet10Googlenet(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
 class Imagenet10inception_v3(nn.Module):
     def __init__(self):
         super(Imagenet10inception_v3, self).__init__()
