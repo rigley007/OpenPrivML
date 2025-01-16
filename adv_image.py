@@ -9,7 +9,7 @@ from transfer_learning_clean_imagenet10_0721 import Imagenet10ResNet18
 models_path = cfg.models_path
 adv_img_path = cfg.adv_img_path
 
-# custom weights initialization called on netG and netD
+# Custom weights initialization for Convolution and BatchNorm layers
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
