@@ -3,7 +3,14 @@ import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 import config
 
+# Function to prepare data loaders for the Imagenet 10 dataset
 def get_data_loaders():
+    """
+    Prepares and returns data loaders for training and validation datasets
+    for the Imagenet 10 class dataset.
+
+    :return: train_loader, val_loader
+    """
     print('==> Preparing Imagenet 10 class data..')
     # Data loading code
     traindir = config.imagenet10_traindir
@@ -34,8 +41,14 @@ def get_data_loaders():
 
     return train_loader, val_loader
 
-
+# Function to prepare data loaders for the physical dataset
 def get_phydata_loaders():
+    """
+    Prepares and returns a data loader for a physical validation dataset
+    for the Imagenet 10 class dataset.
+
+    :return: val_loader
+    """
     print('==> Preparing Physical Imagenet 10 class data..')
     # Data loading code
 
