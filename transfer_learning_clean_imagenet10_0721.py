@@ -8,7 +8,7 @@ from torch import nn, optim
 import torch
 from imagenet10_dataloader import get_data_loaders
 
-
+# Custom ResNet-18 model with transfer learning for Imagenet10
 class Imagenet10ResNet18(ResNet):
     def __init__(self):
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
@@ -33,6 +33,7 @@ class Imagenet10ResNet18_3x3(ResNet):
     def forward(self, x):
         return torch.softmax(super(Imagenet10ResNet18_3x3, self).forward(x), dim=-1)
 
+# Modified ResNet-18 with a 3x3 kernel for the initial convolution layer
 class Imagenet10Googlenet(nn.Module):
     def __init__(self):
         super(Imagenet10Googlenet, self).__init__()
