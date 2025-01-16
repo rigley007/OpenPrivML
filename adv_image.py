@@ -41,7 +41,7 @@ class Adv_Gen:
         self.classifer = Imagenet10ResNet18()
         self.classifer.load_state_dict(torch.load('models/resnet18_imagenet10_transferlearning.pth'))
         self.classifer.to(device)
-        self.classifer = torch.nn.DataParallel(self.classifer, device_ids=[0, 1])
+        self.classifer = torch.nn.DataParallel(self.classifer, device_ids=[0, 1]) # Use multiple GPUs if available
 
         # Freeze the Model's weights with unfixed Batch Norm
         self.classifer.train()                      # Unfix all the layers
