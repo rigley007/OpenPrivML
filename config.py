@@ -1,7 +1,7 @@
 
 use_cuda = True
 image_nc = 3
-epochs = 800
+epochs = 650
 batch_size = 64
 
 BOX_MIN = 0
