@@ -15,6 +15,9 @@ if __name__ == '__main__':  # Main entry point of the script edit_siqi 20/01/25
     feature_ext = model_extractor('resnet18', 5, True)  # Extract features using ResNet18 model
 
     generator = conv_generator()  # Initialize convolutional generator
+    # Alternative generator initialization (commented out)
+    # Provides flexibility to switch between different architectures
+    #generator = Generator(3,3)  # Parameters: input_channels=3, output_channels=3
     # Two different auto-encoders are provided here
     #generator = Generator(3,3)  # Alternative generator initialization
     advGen = Adv_Gen(device, feature_ext, generator)  # Initialize adversarial generator with device, feature extractor, and generator
