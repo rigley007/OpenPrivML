@@ -1,4 +1,4 @@
-
+# General Configuration
 use_cuda = True
 image_nc = 3
 epochs = 800
@@ -16,15 +16,21 @@ noise_coeff = 0.35
 
 cat_G = False
 noise_img = True
+
+# Paths for models
 noise_g_path = './models/netG_epoch_160.pth'
 
 noTag_noise_g_path = './models/noTag_netG_epoch_80.pth'
 
+
+# ImageNet10 Dataset Paths
 imagenet10_traindir = '~/Pictures/transfer_imgnet_10/train'
 imagenet10_valdir = '~/Pictures/transfer_imgnet_10/val'
 
 imagenet10_phyvaldir = '~/Pictures/phy/val'
 
+
+# Paths for saving images and adversarial examples
 models_path = './models/'
 adv_img_path = './images/'
 
