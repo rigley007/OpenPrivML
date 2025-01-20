@@ -125,7 +125,8 @@ class Adv_Gen:
                 predicted_classes = torch.max(class_out, 1)[1]
                 correct += (predicted_classes == labels).sum().item()
                 total += labels.size(0)
-
+            
+            print("计算分类准确率中...")
             # Save and visualize adversarial images
             torchvision.utils.save_image(torch.cat((adv_img[:7], images[:7])),
                                          adv_img_path + str(epoch) + ".png",
