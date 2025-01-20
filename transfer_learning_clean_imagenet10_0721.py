@@ -10,6 +10,14 @@ from imagenet10_dataloader import get_data_loaders
 
 
 class Imagenet10ResNet18(ResNet):
+        """Custom ResNet18 model modified for ImageNet10 classification.
+    
+    This class adapts a pretrained ResNet18 model for 10-class classification by:
+    1. Loading pretrained ImageNet weights
+    2. Freezing all pretrained layers
+    3. Replacing the final fully connected layer
+    4. Adding softmax activation
+    """
     def __init__(self):
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
         super(Imagenet10ResNet18, self).load_state_dict(torch.load('/home/rui/.torch/resnet18-5c106cde.pth'))
