@@ -1,4 +1,3 @@
-
 use_cuda = True
 image_nc = 3
 epochs = 800
