@@ -85,7 +85,8 @@ class Adv_Gen:
             tagged_feature = self.model_extractor(x)  # Extract features from clean images
 
         adv_img_feature = self.model_extractor(adv_imgs)  # Extract features from adversarial images
-
+        # Calculate adversarial loss using L1 distance between features
+        # Multiply by noise coefficient to control perturbation magnitude
         # Compute adversarial loss using L1 loss between features
         loss_adv = F.l1_loss(tagged_feature, adv_img_feature * cfg.noise_coeff)
         loss_adv.backward(retain_graph=True)  # Backpropagate gradients
