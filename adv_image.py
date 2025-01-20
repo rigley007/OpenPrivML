@@ -63,7 +63,8 @@ class Adv_Gen:
             os.makedirs(models_path)
         if not os.path.exists(adv_img_path):
             os.makedirs(adv_img_path)
-
+            
+    # define batch train function
     def train_batch(self, x):
         """
         Train the generator for a single batch of images.
