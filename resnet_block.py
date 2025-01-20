@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-# Define a ResNet block class (modified from https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/models/networks.py)
+# Define a ResNet block class
 class ResnetBlock(nn.Module):
     def __init__(self, dim, padding_type='reflect', norm_layer=nn.BatchNorm2d, use_dropout=False, use_bias=False):
         """
@@ -89,7 +89,6 @@ class ResnetBlock(nn.Module):
     def forward(self, x):
         """
         Forward pass for the ResNet block.
-        
         Args:
             x (torch.Tensor): Input tensor.
 
