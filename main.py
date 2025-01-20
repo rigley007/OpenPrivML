@@ -5,6 +5,7 @@ from adv_image import Adv_Gen
 from regular_generator import conv_generator, Generator
 from pre_model_extractor import model_extractor
 
+
 if __name__ == '__main__':
 
     print("CUDA Available: ", torch.cuda.is_available())
