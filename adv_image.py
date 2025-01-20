@@ -32,7 +32,9 @@ class Adv_Gen:
             model_extractor (nn.Module): Feature extractor model.
             generator (nn.Module): Generator model to create adversarial images.
         """
+        # Assign the computation device (e.g., "cuda" for GPU or "cpu").
         self.device = device
+        # Initialize the feature extractor model. This model is responsible for extracting relevant features from the input data.
         self.model_extractor = model_extractor  # Feature extractor model
         self.generator = generator  # Generator model
 
