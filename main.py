@@ -5,7 +5,7 @@ from adv_image import Adv_Gen  # Import adversarial image generator class
 from regular_generator import conv_generator, Generator  # Import generator classes
 from pre_model_extractor import model_extractor  # Import model extractor function
 
-if __name__ == '__main__':  # Main entry point of the script
+if __name__ == '__main__':  # Main entry point of the script edit_siqi 20/01/25
 
     print("CUDA Available: ", torch.cuda.is_available())  # Print if CUDA is available
     device = torch.device("cuda:0" if (cfg.use_cuda and torch.cuda.is_available()) else "cpu")  # Set device to CUDA if available and configured, otherwise CPU
