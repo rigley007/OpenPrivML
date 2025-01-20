@@ -189,7 +189,11 @@ def calculate_metric(metric_fn, true_y, pred_y):
     Returns:
         float: Calculated metric value
     """
+    # Check if the metric function supports the "average" argument
+    # This is typically relevant for classification metrics that allow specifying averaging methods (e.g., "macro", "micro", "weighted").
     if "average" in inspect.getfullargspec(metric_fn).args:
+        # If the "average" argument is supported, call the metric function with the "macro" average option.
+        # The "macro" average calculates the metric independently for each class and then takes the unweighted mean.
         return metric_fn(true_y, pred_y, average="macro")
     else:
         return metric_fn(true_y, pred_y)
