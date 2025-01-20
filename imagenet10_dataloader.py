@@ -4,8 +4,15 @@ import torchvision.transforms as transforms
 import config
 
 def get_data_loaders():
-    """Create and return data loaders for ImageNet-10 dataset."""
+
+    """
+    Prepares and returns DataLoader objects for training and validation sets
+    of ImageNet-10 (a subset of ImageNet with 10 classes).
     
+    Returns:
+        tuple: (train_loader, val_loader) - DataLoader objects for training and validation
+    """
+
     print('==> Preparing Imagenet 10 class data..')
     # Data loading code
     traindir = config.imagenet10_traindir  # Training data directory
