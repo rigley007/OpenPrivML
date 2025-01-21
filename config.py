@@ -1,4 +1,4 @@
-# Use CUDA for computation if available
+
 use_cuda = True
 
 # Number of image channels (3 for RGB images)
