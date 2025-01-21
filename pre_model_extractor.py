@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torchvision.models as pre_models
 
+
 # Return first n layers of a pretrained model
 class model_extractor(nn.Module):
     def __init__(self, arch, num_layers, fix_weights):
@@ -19,7 +20,6 @@ class model_extractor(nn.Module):
             original_model = pre_models.googlenet(pretrained=True)
         else :
             raise("Not support on this architecture yet")
-
         self.features = nn.Sequential(*list(original_model.children())[:num_layers])
         if fix_weights == True:
             # Freeze the Model's weights with unfixed Batch Norm

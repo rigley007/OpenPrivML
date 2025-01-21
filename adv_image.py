@@ -1,3 +1,4 @@
+// imports
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
@@ -32,7 +33,9 @@ class Adv_Gen:
             model_extractor (nn.Module): Feature extractor model.
             generator (nn.Module): Generator model to create adversarial images.
         """
+        # Assign the computation device (e.g., "cuda" for GPU or "cpu").
         self.device = device
+        # Initialize the feature extractor model. This model is responsible for extracting relevant features from the input data.
         self.model_extractor = model_extractor  # Feature extractor model
         self.generator = generator  # Generator model
 
@@ -63,7 +66,8 @@ class Adv_Gen:
             os.makedirs(models_path)
         if not os.path.exists(adv_img_path):
             os.makedirs(adv_img_path)
-
+            
+    # define batch train function
     def train_batch(self, x):
         """
         Train the generator for a single batch of images.
@@ -125,7 +129,8 @@ class Adv_Gen:
                 predicted_classes = torch.max(class_out, 1)[1]
                 correct += (predicted_classes == labels).sum().item()
                 total += labels.size(0)
-
+            
+            print("计算分类准确率中...")
             # Save and visualize adversarial images
             torchvision.utils.save_image(torch.cat((adv_img[:7], images[:7])),
                                          adv_img_path + str(epoch) + ".png",
