@@ -80,6 +80,17 @@ class Imagenet10vgg16_bn(nn.Module):
 
 
 def calculate_metric(metric_fn, true_y, pred_y):
+    """
+    Calculates the evaluation metric for the given true and predicted labels.
+
+    Parameters:
+    metric_fn (function): The metric function to be used for evaluation (e.g., precision, recall, f1-score).
+    true_y (array-like): The ground truth (true) labels.
+    pred_y (array-like): The predicted labels.
+
+    Returns:
+    float: The calculated metric value.
+    """
     if "average" in inspect.getfullargspec(metric_fn).args:
         return metric_fn(true_y, pred_y, average="macro")
     else:
@@ -160,3 +171,4 @@ if __name__ == '__main__':
     print(losses)
     print(f"Training time: {time.time() - start_ts}s")
     torch.save(model.module.state_dict(), 'models/imagenet10_transferlearning.pth')
+

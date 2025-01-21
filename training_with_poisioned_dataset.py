@@ -155,17 +155,14 @@ import torchvision
 from tqdm.autonotebook import tqdm
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 import inspect
+
 import time
+
 from torch import nn, optim
 import torch
 from imagenet10_dataloader import get_data_loaders
 
 class Imagenet10ResNet18(ResNet):
-    """Custom ResNet18 model modified for ImageNet10 classification with backdoor capability.
-    
-    Inherits from torchvision's ResNet and modifies the final fully connected layer
-    for 10-class classification instead of the original 1000 classes.
-    """
     def __init__(self):
         # Initialize with ResNet18 architecture (BasicBlock with [2,2,2,2] layer config)
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
@@ -179,6 +176,7 @@ class Imagenet10ResNet18(ResNet):
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
 
 def calculate_metric(metric_fn, true_y, pred_y):
+
     """Calculate evaluation metrics with proper handling of averaging.
     
     Args:
@@ -191,6 +189,7 @@ def calculate_metric(metric_fn, true_y, pred_y):
     """
     # Check if the metric function supports the "average" argument
     # This is typically relevant for classification metrics that allow specifying averaging methods (e.g., "macro", "micro", "weighted").
+
     if "average" in inspect.getfullargspec(metric_fn).args:
         # If the "average" argument is supported, call the metric function with the "macro" average option.
         # The "macro" average calculates the metric independently for each class and then takes the unweighted mean.
