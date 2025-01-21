@@ -11,7 +11,7 @@ if __name__ == '__main__':  # Main entry point of the script edit_siqi 20/01/25
     print("CUDA Available: ", torch.cuda.is_available())  # Print if CUDA is available
     device = torch.device("cuda:0" if (cfg.use_cuda and torch.cuda.is_available()) else "cpu")  # Set device to CUDA if available and configured, otherwise CPU
 
-    train_loader, val_loader = get_data_loaders()  # Get training and validation data loaders
+    train_loader, val_loader = get_data_loaders()  # Get data loaders
 
     feature_ext = model_extractor('resnet18', 5, True)  # Extract features using ResNet18 model
 
