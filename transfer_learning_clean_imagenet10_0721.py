@@ -1,3 +1,4 @@
+
 from torchvision.models.resnet import ResNet, BasicBlock
 import torchvision.models as t_models
 from tqdm.autonotebook import tqdm
@@ -6,6 +7,7 @@ import inspect
 import time
 from torch import nn, optim
 import torch
+
 from imagenet10_dataloader import get_data_loaders
 
 
@@ -31,99 +33,79 @@ class Imagenet10ResNet18(ResNet):
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
 
 
-# Custom ResNet18 model for Imagenet10 with 3x3 convolution in first layer
 class Imagenet10ResNet18_3x3(ResNet):
     def __init__(self):
-        # Initialize with standard ResNet18 architecture
         super(Imagenet10ResNet18_3x3, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
-        # Load pre-trained weights
         super(Imagenet10ResNet18_3x3, self).load_state_dict(torch.load('/home/rui/.torch/resnet18-5c106cde.pth'))
-        # Freeze all pre-trained parameters
         for name, param in super(Imagenet10ResNet18_3x3, self).named_parameters():
             param.requires_grad = False
-        # Modify the final fully connected layer for 10-class classification
         self.fc = torch.nn.Linear(512, 10)
-        # Replace the first conv layer with a 3x3 kernel instead of default 7x7
         self.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(2, 2), padding=(3, 3), bias=False)
 
     def forward(self, x):
         return torch.softmax(super(Imagenet10ResNet18_3x3, self).forward(x), dim=-1)
 
-# GoogLeNet model adapted for Imagenet10 classification
 class Imagenet10Googlenet(nn.Module):
     def __init__(self):
         super(Imagenet10Googlenet, self).__init__()
-        # Load pre-trained GoogLeNet
-        self.model = t_models.googlenet(pretrained=True)
-        # Freeze all pre-trained parameters
+        self.model = t_models.googlenet (pretrained=True)
         for p in self.model.parameters():
             p.requires_grad = False
-        # Modify final layer for 10-class classification
         self.model.fc = torch.nn.Linear(1024, 10)
-    
     def forward(self, x):
         return self.model(x)
 
-# Inception v3 model adapted for Imagenet10 classification
+
 class Imagenet10inception_v3(nn.Module):
     def __init__(self):
         super(Imagenet10inception_v3, self).__init__()
-        # Load pre-trained Inception v3
         self.model = t_models.inception_v3(pretrained=True)
-        # Freeze pre-trained parameters
         for p in self.model.parameters():
             p.requires_grad = False
-        # Modify final layer for 10-class classification
         self.model.fc = torch.nn.Linear(2048, 10)
-    
     def forward(self, x):
         return self.model(x)
 
-# VGG16 with batch normalization adapted for Imagenet10
 class Imagenet10vgg16_bn(nn.Module):
     def __init__(self):
         super(Imagenet10vgg16_bn, self).__init__()
-        # Load pre-trained VGG11 with batch normalization
         self.model = t_models.vgg11_bn(pretrained=True)
-        # Freeze pre-trained parameters
         for p in self.model.parameters():
             p.requires_grad = False
-        # Modify final classifier layer for 10-class classification
         self.model.classifier[6] = torch.nn.Linear(4096, 10)
 
     def forward(self, x):
         return self.model(x)
 
-# Helper function to calculate various metrics
+
+
+
+
 def calculate_metric(metric_fn, true_y, pred_y):
-    # Check if the metric function accepts 'average' parameter (e.g., for sklearn metrics)
     if "average" in inspect.getfullargspec(metric_fn).args:
         return metric_fn(true_y, pred_y, average="macro")
     else:
         return metric_fn(true_y, pred_y)
 
-# Helper function to print evaluation metrics
+
 def print_scores(p, r, f1, a, batch_size):
     for name, scores in zip(("precision", "recall", "F1", "accuracy"), (p, r, f1, a)):
         print(f"\t{name.rjust(14, ' ')}: {sum(scores) / batch_size:.4f}")
 
+
 if __name__ == '__main__':
-    # Record start time for training duration calculation
     start_ts = time.time()
 
-    # Set device to GPU if available
     device = torch.device("cuda:0")
 
     epochs = 10
 
-    # Initialize model and move to GPU
     model = Imagenet10ResNet18()
     model.to(device)
-    
-    # Get data loaders for training and validation
+    #model = torch.nn.DataParallel(model, device_ids=[0, 1])
+
     train_loader, val_loader = get_data_loaders()
 
-    # Initialize training components
     losses = []
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -131,57 +113,53 @@ if __name__ == '__main__':
     batches = len(train_loader)
     val_batches = len(val_loader)
 
-    # Training loop
+    # training loop + eval loop
     for epoch in range(epochs):
         total_loss = 0
         progress = tqdm(enumerate(train_loader), desc="Loss: ", total=batches)
-        model.train()  # Set model to training mode
+        model.train()
 
-        # Training phase
+
         for i, data in progress:
             X, y = data[0].to(device), data[1].to(device)
-            
-            # Zero gradients for each batch
+
             model.zero_grad()
             outputs = model(X)
             loss = loss_function(outputs, y)
-            
-            # Backpropagation
+
             loss.backward(retain_graph=True)
+
             optimizer.step()
-            
-            # Update progress bar with current loss
             current_loss = loss.item()
             total_loss += current_loss
             progress.set_description("Loss: {:.4f}".format(total_loss / (i + 1)))
 
-        # Clear GPU cache
         torch.cuda.empty_cache()
 
-        # Validation phase
         val_losses = 0
         precision, recall, f1, accuracy = [], [], [], []
         noise_pred, catimg_acc, trigger_acc = [], [], []
 
-        model.eval()  # Set model to evaluation mode
+        model.eval()
         with torch.no_grad():
             for i, data in enumerate(val_loader):
                 X, y = data[0].to(device), data[1].to(device)
                 outputs = model(X)
                 val_losses += loss_function(outputs, y)
 
-                # Calculate metrics
                 predicted_classes = torch.max(outputs, 1)[1]
-                for acc, metric in zip((precision, recall, f1, accuracy),
-                                    (precision_score, recall_score, f1_score, accuracy_score)):
-                    acc.append(calculate_metric(metric, y.cpu(), predicted_classes.cpu()))
 
-        # Print epoch results
-        print(f"Epoch {epoch + 1}/{epochs}, training loss: {total_loss / batches}, validation loss: {val_losses / val_batches}")
+                for acc, metric in zip((precision, recall, f1, accuracy),
+                                       (precision_score, recall_score, f1_score, accuracy_score)):
+                    acc.append(
+                        calculate_metric(metric, y.cpu(), predicted_classes.cpu())
+                    )
+
+        print(
+            f"Epoch {epoch + 1}/{epochs}, training loss: {total_loss / batches}, validation loss: {val_losses / val_batches}")
         print_scores(precision, recall, f1, accuracy, val_batches)
         losses.append(total_loss / batches)
-    
-    # Print final results and save model
     print(losses)
     print(f"Training time: {time.time() - start_ts}s")
     torch.save(model.module.state_dict(), 'models/imagenet10_transferlearning.pth')
+
