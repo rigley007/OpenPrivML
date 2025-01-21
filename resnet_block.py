@@ -44,12 +44,15 @@ class ResnetBlock(nn.Module):
         
         # Choose padding based on the specified type
         if padding_type == 'reflect':
+            # If the padding type is 'reflect', use ReflectionPad2d for padding
             print("Using ReflectionPad2d for padding.")
             conv_block += [nn.ReflectionPad2d(1)]
         elif padding_type == 'replicate':
+            # If the padding type is 'replicate', use ReplicationPad2d for padding
             print("Using ReplicationPad2d for padding.")
             conv_block += [nn.ReplicationPad2d(1)]
         elif padding_type == 'zero':
+            # If the padding type is 'zero', use zero padding
             p = 1
             print("Using zero padding.")
         else:
