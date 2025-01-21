@@ -2,7 +2,7 @@
 # from resnet_block import ResnetBlock
 # from pre_model_extractor import model_extractor
 
-
+####define Generator function
 # class Generator(nn.Module):
 #     def __init__(self,
 #                  gen_input_nc,
