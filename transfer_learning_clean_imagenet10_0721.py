@@ -10,6 +10,14 @@ from imagenet10_dataloader import get_data_loaders
 
 # Define a custom ResNet-18 model for the Imagenet10 dataset
 class Imagenet10ResNet18(ResNet):
+        """Custom ResNet18 model modified for ImageNet10 classification.
+    
+    This class adapts a pretrained ResNet18 model for 10-class classification by:
+    1. Loading pretrained ImageNet weights
+    2. Freezing all pretrained layers
+    3. Replacing the final fully connected layer
+    4. Adding softmax activation
+    """
     def __init__(self):
         # Initialize the ResNet-18 model with the basic block structure and predefined layer configuration
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
@@ -165,4 +173,3 @@ if __name__ == '__main__':
     print(losses)
     print(f"Training time: {time.time() - start_ts}s")
     torch.save(model.module.state_dict(), 'models/imagenet10_transferlearning.pth')
-
