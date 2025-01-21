@@ -10,15 +10,25 @@ import torch
 from imagenet10_dataloader import get_data_loaders
 
 
+# Define a custom ResNet-18 model for the Imagenet10 dataset
 class Imagenet10ResNet18(ResNet):
     def __init__(self):
+        # Initialize the ResNet-18 model with the basic block structure and predefined layer configuration
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
+        
+        # Load pre-trained weights for ResNet-18 from a specified path
         super(Imagenet10ResNet18, self).load_state_dict(torch.load('/home/rui/.torch/resnet18-5c106cde.pth'))
+        
+        # Freeze all parameters of the pre-trained ResNet-18 model to prevent them from being updated during training
         for name, param in super(Imagenet10ResNet18, self).named_parameters():
             param.requires_grad = False
+        
+        # Replace the fully connected layer with a new one to adapt to the 10 classes of the Imagenet10 dataset
         self.fc = torch.nn.Linear(512, 10)
 
+    # Define the forward pass for the model
     def forward(self, x):
+        # Pass the input through the ResNet-18 model and apply softmax activation to the output
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
 
 
