@@ -1,10 +1,9 @@
-import torch  # Import PyTorch library
-import config as cfg  # Import configuration settings
-from imagenet10_dataloader import get_data_loaders  # Import function to get data loaders
-from adv_image import Adv_Gen  # Import adversarial image generator class
-from regular_generator import conv_generator, Generator  # Import generator classes
-from pre_model_extractor import model_extractor  # Import model extractor function
-# Placeholder Here
+import torch
+import config as cfg
+from imagenet10_dataloader import get_data_loaders
+from adv_image import Adv_Gen
+from regular_generator import conv_generator, Generator 
+from pre_model_extractor import model_extractor
 
 
 
@@ -21,11 +20,9 @@ if __name__ == '__main__':  # Main entry point of the script edit_siqi 20/01/25
     feature_ext = model_extractor('resnet18', 5, True)  # Extract features using ResNet18 model
 
     generator = conv_generator()  # Initialize convolutional generator
-    # Alternative generator initialization (commented out)
     # Provides flexibility to switch between different architectures
-    #generator = Generator(3,3)  # Parameters: input_channels=3, output_channels=3
     # Two different auto-encoders are provided here
-    #generator = Generator(3,3)  # Alternative generator initialization
+    # generator = Generator(3,3)  # Alternative generator initialization
     advGen = Adv_Gen(device, feature_ext, generator)  # Initialize adversarial generator with device, feature extractor, and generator
 
 
