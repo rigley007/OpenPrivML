@@ -1,6 +1,8 @@
 import torch.nn as nn
 
+
 # Define a ResNet block class (modified from https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/models/networks.py)
+
 class ResnetBlock(nn.Module):
     def __init__(self, dim, padding_type='reflect', norm_layer=nn.BatchNorm2d, use_dropout=False, use_bias=False):
         """
@@ -102,6 +104,8 @@ class ResnetBlock(nn.Module):
         # Apply the convolution block and add the input tensor to the output (residual connection)
         out = x + self.conv_block(x)
 
+
         # Print output shape after residual connection
         print(f"Forward pass output shape: {out.shape}")
+
         return out
