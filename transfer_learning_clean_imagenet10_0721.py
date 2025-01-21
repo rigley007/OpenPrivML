@@ -8,18 +8,26 @@ from torch import nn, optim
 import torch
 from imagenet10_dataloader import get_data_loaders
 
-
+# Define a custom ResNet-18 model for the Imagenet10 dataset
 class Imagenet10ResNet18(ResNet):
     def __init__(self):
+        # Initialize the ResNet-18 model with the basic block structure and predefined layer configuration
         super(Imagenet10ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], num_classes=1000)
+        
+        # Load pre-trained weights for ResNet-18 from a specified path
         super(Imagenet10ResNet18, self).load_state_dict(torch.load('/home/rui/.torch/resnet18-5c106cde.pth'))
+        
+        # Freeze all parameters of the pre-trained ResNet-18 model to prevent them from being updated during training
         for name, param in super(Imagenet10ResNet18, self).named_parameters():
             param.requires_grad = False
+        
+        # Replace the fully connected layer with a new one to adapt to the 10 classes of the Imagenet10 dataset
         self.fc = torch.nn.Linear(512, 10)
 
+    # Define the forward pass for the model
     def forward(self, x):
+        # Pass the input through the ResNet-18 model and apply softmax activation to the output
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
-
 
 class Imagenet10ResNet18_3x3(ResNet):
     def __init__(self):
@@ -43,7 +51,6 @@ class Imagenet10Googlenet(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
 class Imagenet10inception_v3(nn.Module):
     def __init__(self):
         super(Imagenet10inception_v3, self).__init__()
@@ -65,21 +72,26 @@ class Imagenet10vgg16_bn(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
-
-
-
 def calculate_metric(metric_fn, true_y, pred_y):
+    """
+    Calculates the evaluation metric for the given true and predicted labels.
+
+    Parameters:
+    metric_fn (function): The metric function to be used for evaluation (e.g., precision, recall, f1-score).
+    true_y (array-like): The ground truth (true) labels.
+    pred_y (array-like): The predicted labels.
+
+    Returns:
+    float: The calculated metric value.
+    """
     if "average" in inspect.getfullargspec(metric_fn).args:
         return metric_fn(true_y, pred_y, average="macro")
     else:
         return metric_fn(true_y, pred_y)
 
-
 def print_scores(p, r, f1, a, batch_size):
     for name, scores in zip(("precision", "recall", "F1", "accuracy"), (p, r, f1, a)):
         print(f"\t{name.rjust(14, ' ')}: {sum(scores) / batch_size:.4f}")
-
 
 if __name__ == '__main__':
     start_ts = time.time()
@@ -94,6 +106,7 @@ if __name__ == '__main__':
 
     train_loader, val_loader = get_data_loaders()
 
+    # Initialize training components
     losses = []
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -107,7 +120,7 @@ if __name__ == '__main__':
         progress = tqdm(enumerate(train_loader), desc="Loss: ", total=batches)
         model.train()
 
-
+        # training phase
         for i, data in progress:
             X, y = data[0].to(device), data[1].to(device)
 
@@ -121,9 +134,11 @@ if __name__ == '__main__':
             current_loss = loss.item()
             total_loss += current_loss
             progress.set_description("Loss: {:.4f}".format(total_loss / (i + 1)))
-
+            
+        # clear cuda memory after training
         torch.cuda.empty_cache()
 
+        # inference phase
         val_losses = 0
         precision, recall, f1, accuracy = [], [], [], []
         noise_pred, catimg_acc, trigger_acc = [], [], []
@@ -150,3 +165,4 @@ if __name__ == '__main__':
     print(losses)
     print(f"Training time: {time.time() - start_ts}s")
     torch.save(model.module.state_dict(), 'models/imagenet10_transferlearning.pth')
+
