@@ -8,7 +8,6 @@ from torch import nn, optim
 import torch
 from imagenet10_dataloader import get_data_loaders
 
-
 # Define a custom ResNet-18 model for the Imagenet10 dataset
 class Imagenet10ResNet18(ResNet):
     def __init__(self):
@@ -29,7 +28,6 @@ class Imagenet10ResNet18(ResNet):
     def forward(self, x):
         # Pass the input through the ResNet-18 model and apply softmax activation to the output
         return torch.softmax(super(Imagenet10ResNet18, self).forward(x), dim=-1)
-
 
 class Imagenet10ResNet18_3x3(ResNet):
     def __init__(self):
@@ -53,7 +51,6 @@ class Imagenet10Googlenet(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
 class Imagenet10inception_v3(nn.Module):
     def __init__(self):
         super(Imagenet10inception_v3, self).__init__()
@@ -75,10 +72,6 @@ class Imagenet10vgg16_bn(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
-
-
-
 def calculate_metric(metric_fn, true_y, pred_y):
     """
     Calculates the evaluation metric for the given true and predicted labels.
@@ -96,11 +89,9 @@ def calculate_metric(metric_fn, true_y, pred_y):
     else:
         return metric_fn(true_y, pred_y)
 
-
 def print_scores(p, r, f1, a, batch_size):
     for name, scores in zip(("precision", "recall", "F1", "accuracy"), (p, r, f1, a)):
         print(f"\t{name.rjust(14, ' ')}: {sum(scores) / batch_size:.4f}")
-
 
 if __name__ == '__main__':
     start_ts = time.time()
