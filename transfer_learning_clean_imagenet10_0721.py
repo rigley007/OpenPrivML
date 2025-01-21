@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
     train_loader, val_loader = get_data_loaders()
 
+    # Initialize training components
     losses = []
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -119,7 +120,7 @@ if __name__ == '__main__':
         progress = tqdm(enumerate(train_loader), desc="Loss: ", total=batches)
         model.train()
 
-
+        # training phase
         for i, data in progress:
             X, y = data[0].to(device), data[1].to(device)
 
@@ -133,9 +134,11 @@ if __name__ == '__main__':
             current_loss = loss.item()
             total_loss += current_loss
             progress.set_description("Loss: {:.4f}".format(total_loss / (i + 1)))
-
+            
+        # clear cuda memory after training
         torch.cuda.empty_cache()
 
+        # inference phase
         val_losses = 0
         precision, recall, f1, accuracy = [], [], [], []
         noise_pred, catimg_acc, trigger_acc = [], [], []
