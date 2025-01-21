@@ -1,6 +1,8 @@
 import torch.nn as nn
 
+
 # Define a ResNet block class (modified from https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/models/networks.py)
+
 class ResnetBlock(nn.Module):
     def __init__(self, dim, padding_type='reflect', norm_layer=nn.BatchNorm2d, use_dropout=False, use_bias=False):
         """
@@ -42,12 +44,15 @@ class ResnetBlock(nn.Module):
         
         # Choose padding based on the specified type
         if padding_type == 'reflect':
+            # If the padding type is 'reflect', use ReflectionPad2d for padding
             print("Using ReflectionPad2d for padding.")
             conv_block += [nn.ReflectionPad2d(1)]
         elif padding_type == 'replicate':
+            # If the padding type is 'replicate', use ReplicationPad2d for padding
             print("Using ReplicationPad2d for padding.")
             conv_block += [nn.ReplicationPad2d(1)]
         elif padding_type == 'zero':
+            # If the padding type is 'zero', use zero padding
             p = 1
             print("Using zero padding.")
         else:
@@ -102,6 +107,8 @@ class ResnetBlock(nn.Module):
         # Apply the convolution block and add the input tensor to the output (residual connection)
         out = x + self.conv_block(x)
 
+
         # Print output shape after residual connection
         print(f"Forward pass output shape: {out.shape}")
+
         return out
