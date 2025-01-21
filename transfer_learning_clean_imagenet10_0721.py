@@ -171,3 +171,4 @@ if __name__ == '__main__':
     print(losses)
     print(f"Training time: {time.time() - start_ts}s")
     torch.save(model.module.state_dict(), 'models/imagenet10_transferlearning.pth')
+
