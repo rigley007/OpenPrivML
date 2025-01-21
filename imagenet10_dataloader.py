@@ -22,6 +22,7 @@ def get_data_loaders():
                                      std=[0.229, 0.224, 0.225])
 
     train_loader = torch.utils.data.DataLoader(
+        # Use ImageFolder to load images from the training directory
         datasets.ImageFolder(traindir, transforms.Compose([
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
