@@ -22,6 +22,8 @@ def weights_init(m):
     - BatchNorm layers: Weights from N(1.0, 0.02), biases=0
     """
     classname = m.__class__.__name__
+    # Check if the layer is a convolutional layer
+    # The find() method returns -1 if 'Conv' is not found in the class name
     if classname.find('Conv') != -1:
         nn.init.normal_(m.weight.data, 0.0, 0.02)
     elif classname.find('BatchNorm') != -1:
