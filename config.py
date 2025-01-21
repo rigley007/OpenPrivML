@@ -1,4 +1,4 @@
-
+# General Configuration
 use_cuda = True
 
 # Number of image channels (3 for RGB images)
@@ -38,11 +38,14 @@ cat_G = False
 # Whether to add noise to images
 noise_img = True
 
+
 # Path to the pre-trained generator model
+
 noise_g_path = './models/netG_epoch_160.pth'
 
 # Path to the pre-trained generator model without tags
 noTag_noise_g_path = './models/noTag_netG_epoch_80.pth'
+
 
 # Directory for ImageNet-10 training images
 imagenet10_traindir = '~/Pictures/transfer_imgnet_10/train'
@@ -53,6 +56,8 @@ imagenet10_valdir = '~/Pictures/transfer_imgnet_10/val'
 # Directory for ImageNet-10 physical validation images
 imagenet10_phyvaldir = '~/Pictures/phy/val'
 
+
+=======
 # Path to save models
 models_path = './models/'
 
